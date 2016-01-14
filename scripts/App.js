@@ -5,7 +5,6 @@ import data from "./data.json";
 import '../styles/style.css';
 
 
-
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -13,7 +12,6 @@ export default class App extends Component {
       localStorage.setItem("lotteryData", JSON.stringify(data));
     }
     this.data = JSON.parse(localStorage.getItem("lotteryData"));
-    console.log(this.data);
     this.state = {
       data: this.data.slice(10,49),
       offset: 10,
@@ -27,7 +25,7 @@ export default class App extends Component {
     this.setState({data: this.data.slice(offset, offset+limit), pageNum: Math.ceil(this.data.length / limit)});
   }
 
-  handlePageClick (data)  {
+  handlePageClick = (data) =>  {
     console.log("handle", data);
     let selected = data.selected;
     let offset = Math.ceil(selected * this.state.limit);
@@ -35,7 +33,7 @@ export default class App extends Component {
     this.setState({offset: offset}, () => {
       this.loadsLottery();
     });
-  }
+  };
 
   render() {
     const {data} = this.state;
@@ -56,6 +54,18 @@ export default class App extends Component {
             {sliderData}
           </Slider>
         </div>
+        <div className="react-paginate">
+          <ReactPaginate  previousLabel={"previous"}
+                          nextLabel={"next"}
+                          breakLabel={<li className="break"><a href="">...</a></li>}
+                          pageNum={this.state.pageNum}
+                          marginPagesDisplayed={2}
+                          pageRangeDisplayed={5}
+                          clickCallback={this.handlePageClick}
+                          containerClassName={"pagination"}
+                          subContainerClassName={"pages pagination"}
+                          activeClassName={"active"} />
+        </div>
         {data.map(i => (
           <div className="list">
             <p>Draw date: {i.draw_date}</p><p>Winning number: {i.winning_numbers}</p>
@@ -69,7 +79,7 @@ export default class App extends Component {
                        pageNum={this.state.pageNum}
                        marginPagesDisplayed={2}
                        pageRangeDisplayed={5}
-                       clickCallback={this.handlePageClick.bind(this)}
+                       clickCallback={this.handlePageClick}
                        containerClassName={"pagination"}
                        subContainerClassName={"pages pagination"}
                        activeClassName={"active"} />
